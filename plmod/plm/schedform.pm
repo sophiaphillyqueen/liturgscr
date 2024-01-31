@@ -20,6 +20,7 @@ use strict;
 use Cwd 'abs_path';
 use File::Basename;
 use plm::schedform::prv;
+use plm::schedform::prv_02;
 use plm::rgx;
 
 
@@ -92,6 +93,10 @@ sub instance
     if ( $self->{'x'}->{'ptr'} > ( $self->{'x'}->{'siz'} + 1.5 ) )
     {
       my $lc3_a;
+      if ( exists($self->{'x'}->{'local'}) )
+      {
+        &plm::schedform::prv_02::reverto($self);
+      }
       if ( exists($self->{'x'}->{'nx'}) )
       {
         $lc3_a = $self->{'x'}->{'nx'};
