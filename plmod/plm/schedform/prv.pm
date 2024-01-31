@@ -28,6 +28,7 @@ my $hash_fun_main = {
   'show' => \&acto_show_x,
   'loadsmp' => \&acto_loadsmp_x,
   'loadvsmp' => \&acto_loadvsmp_x,
+  'loadvvsmp' => \&acto_loadvvsmp_x,
   'env' => \&acto_env_x,
   'sh' => \&acto_sh_x,
   'fi' => \&the_zen_fun,
@@ -259,6 +260,37 @@ sub acto_loadvsmp_x
   $lc_rlidx = $self->{'dx'}->{$lc_rldvar};
   
   $lc_passon = $lc_fldn . ':' . $lc_sdate . ':' . $lc_stpd . ':' . $lc_start . ':' . $lc_rlidx . ':';
+  
+  
+  &acto_loadsmp_x($self,$lc_passon);
+}
+
+# The :loadvvsmp: directive is of the same mindset as :loadvsmp:
+# except it takes it one step further. While :loadvsmp: only
+# bases the source filename on a variable, :loadvvsmp: also does
+# that with the launch-date of a cycle, how many steps a day
+# the cycle takes, and how many steps in the cycle starts at.
+sub acto_loadvvsmp_x
+{
+  my $self;
+  my $lc_fldn;
+  my $lc_sdate;
+  my $lc_stpd;
+  my $lc_start;
+  my $lc_rldvar;
+  my $lc_rlidx;
+  my $lc_passon;
+
+  $self = shift;
+  ($lc_fldn,$lc_sdate,$lc_stpd,$lc_start,$lc_rldvar) = split(quotemeta(':'), $_[0]);
+  $lc_rlidx = $self->{'dx'}->{$lc_rldvar};
+  
+  $lc_passon = $lc_fldn . ':'
+      . $self->{'dx'}->{$lc_sdate} . ':'
+      . $self->{'dx'}->{$lc_stpd} . ':'
+      . $self->{'dx'}->{$lc_start} . ':'
+      . $lc_rlidx . ':'
+  ;
   
   
   &acto_loadsmp_x($self,$lc_passon);
