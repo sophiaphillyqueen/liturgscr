@@ -29,6 +29,7 @@ my $hash_fun_main = {
   'loadsmp' => \&acto_loadsmp_x,
   'loadvsmp' => \&acto_loadvsmp_x,
   'loadvvsmp' => \&acto_loadvvsmp_x,
+  'local' => \&acto_local_x,
   'env' => \&acto_env_x,
   'sh' => \&acto_sh_x,
   'fi' => \&the_zen_fun,
@@ -294,6 +295,39 @@ sub acto_loadvvsmp_x
   
   
   &acto_loadsmp_x($self,$lc_passon);
+}
+
+sub acto_local_x {
+  my $self;
+  my $lc_rgfl;
+  my @lc_nvar;
+  my @lc_olvar;
+  my $lc_ahash;
+  my $lc_item;
+  
+  $self = shift;
+  $lc_rgfl = &plm::strops::adcolon($_[0]);
+  @lc_nvar = split('\:',$lc_rgfl);
+  @lc_olvar = ();
+  $lc_ahash = {};
+  if ( exists($self->{'x'}->{'local'}) )
+  {
+    my $lc2_a;
+    $lc2_a = $self->{'x'}->{'local'}->{'all'};
+    @lc_olvar = @$lc2_a;
+    $lc_ahash = $self->{'x'}->{'local'}->{'val'}
+  }
+  foreach $lc_item (@lc_nvar)
+  {
+    if ( exists($self->{'dx'}->{$lc_item}) )
+    {
+      $lc_ahash->{$lc_item} = $self->{'dx'}->{$lc_item};
+    }
+  }
+  $self->{'x'}->{'local'} = {
+      'all' => [@lc_nvar,@lc_olvar],
+      'val' => $lc_ahash,
+  };
 }
 
 sub acto_show_x

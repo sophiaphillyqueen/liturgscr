@@ -29,7 +29,7 @@ sub reverto {
   $self = shift;
   $lc_loc = $self->{'x'}->{'local'};
   $lc_lca = $lc_loc->{'all'};
-  $lc_lca = $lc_loc->{'val'};
+  $lc_lcv = $lc_loc->{'val'};
   foreach $lc_itm (@$lc_lca)
   {
     delete($self->{'dx'}->{$lc_itm});
