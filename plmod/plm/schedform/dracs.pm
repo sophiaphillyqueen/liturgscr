@@ -36,18 +36,6 @@ sub ac__chvard__x
   ;
 }
 
-sub ac__vardir__x
-{
-  my $self;
-  my $lc_srcv;
-  my $lc_olddir;
-  
-  $self = shift;
-  ($lc_srcv) = split('\:',$_[0]);
-  $lc_olddir = $self->{'dx'}->{$lc_srcv};
-  $self->{'dx'}->{$lc_srcv} = dirname($lc_olddir);
-}
-
 sub ac__exvar__x
 {
   my $self;
@@ -67,6 +55,18 @@ sub ac__exvar__x
   $self->{'dx'}->{$lc_dstv} =
       &plm::schedform::prv_02::extrac($lc_fldn,$lc_src_v)
   ;
+}
+
+sub ac__vardir__x
+{
+  my $self;
+  my $lc_srcv;
+  my $lc_olddir;
+  
+  $self = shift;
+  ($lc_srcv) = split('\:',$_[0]);
+  $lc_olddir = $self->{'dx'}->{$lc_srcv};
+  $self->{'dx'}->{$lc_srcv} = dirname($lc_olddir);
 }
 
 1;
