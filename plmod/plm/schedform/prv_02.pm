@@ -40,5 +40,23 @@ sub reverto {
   }
 }
 
+sub extrac {
+  my $lc_field;
+  my $lc_fullc;
+  my $lc_primo;
+  my $lc_extro;
+  my $lc_fla;
+  my $lc_flb;
+  my $lc_optag;
+  
+  ($lc_field,$lc_fullc) = @_;
+  $lc_optag = '<infra:' . $lc_field . '>';
+  ($lc_primo,$lc_extro) = split(quotemeta($lc_optag),$lc_fullc);
+  ($lc_fla) = split(quotemeta('</infra:'),$lc_extro);
+  ($lc_flb) = split(quotemeta('</infra>'),$lc_fla);
+  
+  return $lc_flb;
+}
+
 
 1;

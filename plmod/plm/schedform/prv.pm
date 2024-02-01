@@ -21,15 +21,19 @@ use File::Basename;
 use plm::filnom;
 use plm::filops;
 use plm::schedform::condi;
+use plm::schedform::dracs;
 use plm::strops;
 
 
 my $hash_fun_main = {
+  'chvard' => \&plm::schedform::dracs::ac__chvard__x,
+  'exvar' => \&plm::schedform::dracs::ac__exvar__x,
   'show' => \&acto_show_x,
   'loadsmp' => \&acto_loadsmp_x,
   'loadvsmp' => \&acto_loadvsmp_x,
   'loadvvsmp' => \&acto_loadvvsmp_x,
   'local' => \&acto_local_x,
+  'vardir' => \&plm::schedform::dracs::ac__vardir__x,
   'env' => \&acto_env_x,
   'sh' => \&acto_sh_x,
   'fi' => \&the_zen_fun,
