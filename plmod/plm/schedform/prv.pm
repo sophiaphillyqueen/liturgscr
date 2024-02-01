@@ -27,7 +27,9 @@ use plm::strops;
 
 my $hash_fun_main = {
   'chvard' => \&plm::schedform::dracs::ac__chvard__x,
+  'clear' => \&plm::schedform::dracs::ac__clear__x,
   'exvar' => \&plm::schedform::dracs::ac__exvar__x,
+  'fload' => \&plm::schedform::dracs::ac__fload__x,
   'show' => \&acto_show_x,
   'loadsmp' => \&acto_loadsmp_x,
   'loadvsmp' => \&acto_loadvsmp_x,
