@@ -21,13 +21,19 @@ use File::Basename;
 use plm::filnom;
 use plm::filops;
 use plm::schedform::condi;
+use plm::schedform::dracs;
 use plm::strops;
 
 
 my $hash_fun_main = {
+  'chvard' => \&plm::schedform::dracs::ac__chvard__x,
+  'exvar' => \&plm::schedform::dracs::ac__exvar__x,
   'show' => \&acto_show_x,
   'loadsmp' => \&acto_loadsmp_x,
   'loadvsmp' => \&acto_loadvsmp_x,
+  'loadvvsmp' => \&acto_loadvvsmp_x,
+  'local' => \&acto_local_x,
+  'vardir' => \&plm::schedform::dracs::ac__vardir__x,
   'env' => \&acto_env_x,
   'sh' => \&acto_sh_x,
   'fi' => \&the_zen_fun,
@@ -262,6 +268,70 @@ sub acto_loadvsmp_x
   
   
   &acto_loadsmp_x($self,$lc_passon);
+}
+
+# The :loadvvsmp: directive is of the same mindset as :loadvsmp:
+# except it takes it one step further. While :loadvsmp: only
+# bases the source filename on a variable, :loadvvsmp: also does
+# that with the launch-date of a cycle, how many steps a day
+# the cycle takes, and how many steps in the cycle starts at.
+sub acto_loadvvsmp_x
+{
+  my $self;
+  my $lc_fldn;
+  my $lc_sdate;
+  my $lc_stpd;
+  my $lc_start;
+  my $lc_rldvar;
+  my $lc_rlidx;
+  my $lc_passon;
+
+  $self = shift;
+  ($lc_fldn,$lc_sdate,$lc_stpd,$lc_start,$lc_rldvar) = split(quotemeta(':'), $_[0]);
+  $lc_rlidx = $self->{'dx'}->{$lc_rldvar};
+  
+  $lc_passon = $lc_fldn . ':'
+      . $self->{'dx'}->{$lc_sdate} . ':'
+      . $self->{'dx'}->{$lc_stpd} . ':'
+      . $self->{'dx'}->{$lc_start} . ':'
+      . $lc_rlidx . ':'
+  ;
+  
+  
+  &acto_loadsmp_x($self,$lc_passon);
+}
+
+sub acto_local_x {
+  my $self;
+  my $lc_rgfl;
+  my @lc_nvar;
+  my @lc_olvar;
+  my $lc_ahash;
+  my $lc_item;
+  
+  $self = shift;
+  $lc_rgfl = &plm::strops::adcolon($_[0]);
+  @lc_nvar = split('\:',$lc_rgfl);
+  @lc_olvar = ();
+  $lc_ahash = {};
+  if ( exists($self->{'x'}->{'local'}) )
+  {
+    my $lc2_a;
+    $lc2_a = $self->{'x'}->{'local'}->{'all'};
+    @lc_olvar = @$lc2_a;
+    $lc_ahash = $self->{'x'}->{'local'}->{'val'}
+  }
+  foreach $lc_item (@lc_nvar)
+  {
+    if ( exists($self->{'dx'}->{$lc_item}) )
+    {
+      $lc_ahash->{$lc_item} = $self->{'dx'}->{$lc_item};
+    }
+  }
+  $self->{'x'}->{'local'} = {
+      'all' => [@lc_nvar,@lc_olvar],
+      'val' => $lc_ahash,
+  };
 }
 
 sub acto_show_x
