@@ -20,6 +20,9 @@ use strict;
 use File::Basename;
 use plm::schedform::prv_02;
 use plm::filnom;
+use plm::filops;
+use plm::strops;
+use plm::lookup;
 
 sub ac__chvard__x
 {
@@ -36,16 +39,20 @@ sub ac__chvard__x
   ;
 }
 
-sub ac__vardir__x
+sub ac__clear__x
 {
   my $self;
-  my $lc_srcv;
-  my $lc_olddir;
+  my $lc_argfld;
+  my @lc_argray;
+  my $lc_argitm;
   
   $self = shift;
-  ($lc_srcv) = split('\:',$_[0]);
-  $lc_olddir = $self->{'dx'}->{$lc_srcv};
-  $self->{'dx'}->{$lc_srcv} = dirname($lc_olddir);
+  $lc_argfld = &plm::strops::adcolon($_[0]);
+  @lc_argray = split('\:',$lc_argfld);
+  foreach $lc_argitm (@lc_argray)
+  {
+    delete($self->{'dx'}->{$lc_argitm});
+  }
 }
 
 sub ac__exvar__x
@@ -67,6 +74,68 @@ sub ac__exvar__x
   $self->{'dx'}->{$lc_dstv} =
       &plm::schedform::prv_02::extrac($lc_fldn,$lc_src_v)
   ;
+}
+
+sub ac__fload__x
+{
+  my $self;
+  my $lc_rgfld;
+  my $lc_dstvar;
+  my $lc_filrel;
+  my $lc_filact;
+  my $lc_cont;
+  
+  $self = shift;
+  $lc_rgfld =  &plm::strops::adcolon($_[0]);
+  ($lc_dstvar,$lc_filrel) = split('\:',$lc_rgfld,2);
+  $lc_filact =
+      &plm::filnom::reltod($self->{'x'}->{'drec'}
+      ,$self->{'dx'}->{$lc_filrel})
+  ;
+  $lc_cont = &plm::filops::loadraw($lc_filact);
+  
+  $self->{'dx'}->{$lc_dstvar} = $lc_cont;
+}
+
+sub ac__lookup__x
+{
+  my $self;
+  my $lc_varn;
+  my $lc_rgfl;
+  my @lc_rgray;
+  my $lc_curvl;
+  my $lc_itm;
+  
+  $self = shift;
+  ($lc_varn,$lc_rgfl) = split('\:',&plm::strops::adcolon($_[0]),2);
+  @lc_rgray = split('\:',$lc_rgfl);
+  $lc_curvl =
+      &plm::filnom::reltod($self->{'x'}->{'drec'}
+      ,$self->{'dx'}->{$lc_varn})
+  ;
+  if ( !( -f $lc_curvl ) )
+  {
+    die("\nFATAL ERROR: No such file:\n"
+        . "  File: " . $lc_curvl . " :\n"
+    . "\n" );
+  }
+  foreach $lc_itm (@lc_rgray)
+  {
+    $lc_curvl = &plm::lookup::main($lc_curvl,$lc_itm);
+  }
+  $self->{'dx'}->{$lc_varn} = $lc_curvl;
+}
+
+sub ac__vardir__x
+{
+  my $self;
+  my $lc_srcv;
+  my $lc_olddir;
+  
+  $self = shift;
+  ($lc_srcv) = split('\:',$_[0]);
+  $lc_olddir = $self->{'dx'}->{$lc_srcv};
+  $self->{'dx'}->{$lc_srcv} = dirname($lc_olddir);
 }
 
 1;
