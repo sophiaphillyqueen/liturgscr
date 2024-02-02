@@ -22,6 +22,7 @@ use plm::schedform::prv_02;
 use plm::filnom;
 use plm::filops;
 use plm::strops;
+use plm::lookup;
 
 sub ac__chvard__x
 {
@@ -94,6 +95,35 @@ sub ac__fload__x
   $lc_cont = &plm::filops::loadraw($lc_filact);
   
   $self->{'dx'}->{$lc_dstvar} = $lc_cont;
+}
+
+sub ac__lookup__x
+{
+  my $self;
+  my $lc_varn;
+  my $lc_rgfl;
+  my @lc_rgray;
+  my $lc_curvl;
+  my $lc_itm;
+  
+  $self = shift;
+  ($lc_varn,$lc_rgfl) = split('\:',&plm::strops::adcolon($_[0]),2);
+  @lc_rgray = split('\:',$lc_rgfl);
+  $lc_curvl =
+      &plm::filnom::reltod($self->{'x'}->{'drec'}
+      ,$self->{'dx'}->{$lc_varn})
+  ;
+  if ( !( -f $lc_curvl ) )
+  {
+    die("\nFATAL ERROR: No such file:\n"
+        . "  File: " . $lc_curvl . " :\n"
+    . "\n" );
+  }
+  foreach $lc_itm (@lc_rgray)
+  {
+    $lc_curvl = &plm::lookup::main($lc_curvl,$lc_itm);
+  }
+  $self->{'dx'}->{$lc_varn} = $lc_curvl;
 }
 
 sub ac__vardir__x
