@@ -63,6 +63,7 @@ sub subsid_aa
       'filsrc' => $lc_filsrc,
       'varnom' => $lc_varnom,
       'filc' => $lc_filpat,
+      'ok' => ( 1 > 2 ),
   };
   foreach $lc_itm (@lc_filcons)
   {
@@ -85,15 +86,25 @@ sub subsid_aa
     }
   }
   
-  return ($lc_spc->{'ret'});
+  if ( $lc_spc->{'ok'} )
+  {
+    return ($lc_spc->{'ret'});
+  }
+  die "\n"
+      . "FATAL ERROR: Config variable not found:\n"
+      . "  Val-Config file: " . $lc_filsrc . " :\n"
+      . "         Variable: " . $lc_varnom . " :\n"
+  . "\n";
 }
 
 sub lt__env__x {
   $_[0]->{'ret'} .= $ENV{$_[1]};
+  $_[0]->{'ok'} = ( 2 > 1 );
 }
 
 sub lt__lit__x {
   $_[0]->{'ret'} .= $_[1];
+  $_[0]->{'ok'} = ( 2 > 1 );
 }
 
 1;

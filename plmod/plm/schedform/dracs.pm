@@ -116,7 +116,11 @@ sub ac__lookup__x
   if ( !( -f $lc_curvl ) )
   {
     die("\nFATAL ERROR: No such file:\n"
-        . "  File: " . $lc_curvl . " :\n"
+        . "     File: " . $lc_curvl . " :\n"
+        . "   Ref as: " . $self->{'dx'}->{$lc_varn} . " :\n"
+        . "  Ref var: " . $lc_varn . " :\n"
+        . "   Ref in: " . $self->{'x'}->{'file'} . " :\n"
+        . "     line: " . $self->{'x'}->{'ptr'} . " :\n"
     . "\n" );
   }
   foreach $lc_itm (@lc_rgray)
