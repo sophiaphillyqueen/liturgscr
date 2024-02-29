@@ -106,6 +106,7 @@ sub prestall {
 
 &prestall('liturgscr-gener','x-generit');
 &prestall('liturgscr-prep','x-prep-calit-dx');
+&prestall('liturgscr-lookup','x-lookup');
 
 
 
