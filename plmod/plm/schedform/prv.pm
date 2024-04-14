@@ -26,8 +26,10 @@ use plm::strops;
 
 
 my $hash_fun_main = {
+  'addtx' => \&acto_addtx_x,
   'chvard' => \&plm::schedform::dracs::ac__chvard__x,
   'clear' => \&plm::schedform::dracs::ac__clear__x,
+  'envset' => \&acto_envset_x,
   'exvar' => \&plm::schedform::dracs::ac__exvar__x,
   'fload' => \&plm::schedform::dracs::ac__fload__x,
   'lookup' => \&plm::schedform::dracs::ac__lookup__x,
@@ -42,7 +44,7 @@ my $hash_fun_main = {
   'fi' => \&the_zen_fun,
   'label' => \&the_zen_fun,
   'subload' => \&acto_subload_x,
-  #'subvload' => \&acto_subvload_x, # Not yet with this idea ...
+  'subvload' => \&acto_subvload_x, # Not yet with this idea ...
   'subrun' => \&acto_subrun_x,
   'cp' => \&acto_cp_x,
   'apnd' => \&acto_apnd_x,
@@ -147,6 +149,18 @@ sub acto_env_x
   
   ($lc_varn) = split(quotemeta(':'),$_[0]);
   $self->{'buf'} .= $ENV{$lc_varn};
+}
+
+sub acto_envset_x
+{
+  my $self;
+  my $lc_varn;
+  my $lc_evarn;
+  
+  $self = shift;
+  
+  ($lc_varn,$lc_evarn) = split(quotemeta(':'),$_[0]);
+  $self->{'dx'}->{$lc_varn} = $ENV{$lc_evarn};
 }
 
 sub acto_sh_x
@@ -503,7 +517,37 @@ sub acto_apnd_x
   $self->{'dx'}->{$lc_dstnom} .= $self->{'dx'}->{$lc_srcnom};
 }
 
+sub acto_addtx_x
+{
+  my $self;
+  my $lc_valu;
+  my $lc_dstnom;
+  
+  $self = shift;
+  ( $lc_dstnom, $lc_valu ) = split(quotemeta(':'),$_[0]);
+  
+  $self->{'dx'}->{$lc_dstnom} .= $lc_valu;
+}
+
 sub the_zen_fun { } # A very short function, indeed.
+
+sub acto_subvload_x
+{
+  my $self;
+  my $lc_sbnom;
+  my $lc_filvar;
+  my $lc_filarg;
+  
+  $self = shift;
+  # Get the function's basic parameters
+  ($lc_sbnom,$lc_filvar) = split(quotemeta(':'),$_[0]);
+  if ( !exists($self->{'dx'}->{$lc_filvar}) )
+  {
+    die "\nNo such variable: " . $lc_filvar . " :\n\n";
+  }
+  $lc_filarg = $self->{'dx'}->{$lc_filvar};
+  &inr_acto_subload_x_01($self,$lc_sbnom,$lc_filarg);
+}
 
 sub acto_subload_x
 {
