@@ -521,10 +521,12 @@ sub acto_addtx_x
 {
   my $self;
   my $lc_valu;
+  my $lc_cvalu;
   my $lc_dstnom;
   
   $self = shift;
-  ( $lc_dstnom, $lc_valu ) = split(quotemeta(':'),$_[0]);
+  ( $lc_dstnom, $lc_cvalu ) = split(quotemeta(':'),$_[0],2);
+  $lc_valu = &plm::strops::adcolon($lc_cvalu);
   
   $self->{'dx'}->{$lc_dstnom} .= $lc_valu;
 }
