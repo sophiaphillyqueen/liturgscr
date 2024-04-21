@@ -27,6 +27,7 @@ use plm::strops;
 
 my $hash_fun_main = {
   'addtx' => \&acto_addtx_x,
+  'capflit' => \&acto_capflit_x,
   'chvard' => \&plm::schedform::dracs::ac__chvard__x,
   'clear' => \&plm::schedform::dracs::ac__clear__x,
   'envset' => \&acto_envset_x,
@@ -432,6 +433,20 @@ sub acto_lit_x
   ($lc_varn) = split(quotemeta(':'),$_[0]);
   
   $self->{'buf'} .= $self->{'dx'}->{$lc_varn};
+}
+
+sub acto_capflit_x
+{
+  my $self;
+  my $lc_varn;
+  my $lc_capo;
+  
+  $self = shift;
+  ($lc_varn) = split(quotemeta(':'),$_[0]);
+  
+  $lc_capo = $self->{'dx'}->{$lc_varn};
+  $lc_capo =~ s/^([a-z])/\U$1/;
+  $self->{'buf'} .= $lc_capo;
 }
 
 sub d__siz_of_idx
